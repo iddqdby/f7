@@ -1,0 +1,67 @@
+{
+    "name": "iddqdby/f7",
+    "description": "Functional library for PHP 7.",
+    "type": "library",
+    "homepage": "https://github.com/iddqdby/f7",
+    "authors": [
+        {
+            "name": "Sergey Protasevich",
+            "email": "sergey.p@gmx.com"
+        }
+    ],
+    "autoload": {
+    	"psr-4": {
+    		"meta\\": "src/meta",
+    		"monad\\": "src/monad"
+		},
+    	"files": [
+            "src/monad/_monad.php",
+			"src/monad/_stream.php",
+			"src/monad/_optional.php",
+			"src/monad/_chain.php",
+			"src/const.php",
+			"src/meta/is_empty.php",
+			"src/meta/is_traversable.php",
+			"src/meta/is_countable.php",
+			"src/meta/all_match.php",
+			"src/meta/none_match.php",
+			"src/meta/is_array_access.php",
+			"src/meta/any_match.php",
+			"src/meta/_statistics.php",
+			"src/meta/is_like_array.php",
+			"src/meta/args_num.php",
+			"src/func/pass_through.php",
+			"src/func/set_args_array.php",
+			"src/func/dependency_injection_container.php",
+			"src/func/property_getter.php",
+			"src/func/set_args.php",
+			"src/func/disjunction.php",
+			"src/func/throw_ex.php",
+			"src/func/curry.php",
+			"src/func/sequence.php",
+			"src/func/method_caller.php",
+			"src/func/pass_through_array.php",
+			"src/func/conjunction.php",
+			"src/func/catch_ex.php",
+			"src/func/container.php",
+			"src/func/call_once.php",
+			"src/func/conditionally.php",
+			"src/func/decorate.php",
+			"src/func/reverse.php",
+			"src/func/negation.php",
+			"src/func/constructor.php",
+			"src/func/array_value_getter.php",
+			"src/convert/to_array.php",
+			"src/convert/traversable_map.php",
+			"src/convert/to_traversable.php",
+			"src/convert/traversable_walk.php",
+			"src/convert/to_array_like.php",
+			"src/convert/traversable_reduce.php",
+			"src/convert/traversable_filter.php",
+			"src/convert/traversable_sort.php",
+			"src/convert/traversable_flatten.php",
+			"src/convert/traversable_randomize.php",
+			"src/convert/traversable_merge.php"
+        ]
+    }
+}
