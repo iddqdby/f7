@@ -8,15 +8,15 @@
 		"source" : "https://github.com/iddqdby/f7",
 		"issues" : "https://github.com/iddqdby/f7/issues"
 	},
-	"keywords" : [
-		"functionnal programming lambda calculus monad monads higher order functions dependency injection container"
-	],
-	"authors" : [ 
-	 	{
+	"keywords" : ["functional programming", "lambda calculus", "monad monads", "higher order functions", "dependency injection container"],
+	"authors" : [{
 			"name" : "Sergey Protasevich",
 			"email" : "sergey.p@gmx.com"
 		}
 	],
+	"require" : {
+		"php" : "^7.0"
+	},
 	"autoload" : {
 		"psr-4" : {
 			"meta\\" : "src/meta",
