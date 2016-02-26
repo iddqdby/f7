@@ -71,6 +71,7 @@ use const monad\optional;
 use meta\Statistics;
 use Countable;
 use InvalidArgumentException;
+use function func\set_args;
 
 
 /**
@@ -84,11 +85,11 @@ class Stream extends Monad implements Countable {
     protected function preprocess( $value ) {
         return to_array( $value );
     }
-    
-    
+
+
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see \monad\Monad::map($mapper)
      */
     public function map( callable $mapper ): Stream {
@@ -96,13 +97,13 @@ class Stream extends Monad implements Countable {
         $stream->close_handlers = $this->close_handlers;
         return $stream;
     }
-    
-    
+
+
     /**
      * {@inheritDoc}
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @see \monad\Monad::flatMap($mapper)
      * @see \monad\Stream::close()
      */
@@ -111,14 +112,14 @@ class Stream extends Monad implements Countable {
         $this->close();
         return $monad;
     }
-    
-    
+
+
     /**
      * Add close handler or handlers.
-     * 
+     *
      * Current value of the stream will be passed to each handler,
      * result of a handler will be ignored.
-     * 
+     *
      * @param callable|callable[] ...$handlers a handler, handlers, or array of handlers
      * @throws InvalidArgumentException
      * @return Stream this stream
@@ -135,11 +136,11 @@ class Stream extends Monad implements Countable {
 
 
     /* Monad::map() shorthands */
-    
-    
+
+
     /**
      * Map each element of the stream.
-     * 
+     *
      * @param callable $mapper a mapper
      * @return Stream a stream
      * @see \convert\traversable_map
@@ -147,11 +148,11 @@ class Stream extends Monad implements Countable {
     public function mapEach( callable $mapper ): Stream {
         return $this->map( curry( traversable_map, 2 )( $mapper ) );
     }
-    
-    
+
+
     /**
      * Flatten the stream.
-     * 
+     *
      * @param bool $preserve_keys preserve original keys (optional, default is false)
      * @return Stream a stream
      * @see \convert\traversable_flatten
@@ -163,7 +164,7 @@ class Stream extends Monad implements Countable {
 
     /**
      * Filter the stream.
-     * 
+     *
      * @param callable $predicate a predicate to filter the stream
      * @return Stream a stream
      * @see \convert\traversable_filter
@@ -171,11 +172,11 @@ class Stream extends Monad implements Countable {
     public function filter( callable $predicate ): Stream {
         return $this->map( curry( traversable_filter, 2 )( $predicate ) );
     }
-    
-    
+
+
     /**
      * Remove duplicate values from the stream
-     * 
+     *
      * @param string $sort_flags sorting flags (optional, default is SORT_REGULAR)
      * @return Stream a stream
      * @see array_unique
@@ -183,22 +184,22 @@ class Stream extends Monad implements Countable {
     public function distinct( $sort_flags = SORT_REGULAR ): Stream {
         return $this->map( curry( reverse( array_unique ), 2 )( $sort_flags ) );
     }
-    
-    
+
+
     /**
      * Exchange all keys with their associated values in the stream.
-     * 
+     *
      * @return Stream a stream
      * @see array_flip
      */
     public function flip(): Stream {
         return $this->map( array_flip );
     }
-    
-    
+
+
     /**
      * Extract a slice of the stream.
-     * 
+     *
      * @param int $offset offset
      * @param int $length length (optional, default is null)
      * @param bool $preserve_keys preserve keys (optional, default is false)
@@ -212,11 +213,11 @@ class Stream extends Monad implements Countable {
                 ( $offset )
         );
     }
-    
-    
+
+
     /**
      * Extract a slice of the stream.
-     * 
+     *
      * @param int $max_size max size
      * @return Stream a stream
      * @see array_slice
@@ -224,8 +225,8 @@ class Stream extends Monad implements Countable {
     public function limit( int $max_size ): Stream {
         return $this->slice( 0, $max_size );
     }
-    
-    
+
+
     /**
      * Extract a slice of the stream.
      *
@@ -236,11 +237,11 @@ class Stream extends Monad implements Countable {
     public function skip( int $number ): Stream {
         return $this->slice( $number - 1 );
     }
-    
-    
+
+
     /**
      * Merge this stream with one or more traversables.
-     * 
+     *
      * @param array|\Traversable ...$traversables the traversables
      * @return Stream a stream
      * @see \convert\traversable_merge
@@ -250,11 +251,11 @@ class Stream extends Monad implements Countable {
         traversable_walk( $merger, $traversables );
         return $this->map( $merger );
     }
-    
-    
+
+
     /**
      * Sort the stream.
-     * 
+     *
      * @param callable|int $flags_or_comparator either one of SORT_* constants
      * or a comparator function (optional, default is SORT_REGULAR)
      * @return Stream a stream
@@ -263,11 +264,11 @@ class Stream extends Monad implements Countable {
     public function sort( $flags_or_comparator = SORT_REGULAR ): Stream {
         return $this->map( curry( traversable_sort, 2 )( $flags_or_comparator ) );
     }
-    
-    
+
+
     /**
      * Reverse the order of elements of the stream.
-     * 
+     *
      * @param bool $preserve_keys preserve original keys (optional, default is false)
      * @return Stream a stream
      * @see array_reverse
@@ -275,22 +276,22 @@ class Stream extends Monad implements Countable {
     public function reverse( bool $preserve_keys = false ): Stream {
         return $this->map( curry( reverse( array_reverse ), 2 )( $preserve_keys ) );
     }
-    
-    
+
+
     /**
      * Randomize the order of elements of the stream.
-     * 
+     *
      * @return Stream a stream
      * @see \convert\traversable_randomize
      */
     public function randomize(): Stream {
         return $this->map( traversable_randomize );
     }
-    
-    
+
+
     /* Monad::flatMap() shorthands */
-    
-    
+
+
     private function find( $predicate, array $array ) {
         foreach( $array as $key => $item ) {
             if( null === $predicate || call_user_func( $predicate, $value, $key ) ) {
@@ -299,13 +300,13 @@ class Stream extends Monad implements Countable {
         }
         return null;
     }
-    
-    
+
+
     /**
      * Find first element of the stream (optionally matched with predicate).
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @param callable $predicate the predicate (optional)
      * @return Optional an optional result
      * @see \monad\Stream::close()
@@ -316,11 +317,11 @@ class Stream extends Monad implements Countable {
                 optional
         ) );
     }
-    
-    
+
+
     /**
      * Find last element of the stream (optionally matched with predicate).
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
      *
      * @param callable $predicate the predicate (optional)
@@ -334,11 +335,11 @@ class Stream extends Monad implements Countable {
                 optional
         ) );
     }
-    
-    
+
+
     /**
      * Find random element of the stream (optionally matched with predicate).
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
      *
      * @param callable $predicate the predicate (optional)
@@ -359,18 +360,18 @@ class Stream extends Monad implements Countable {
                 optional
         ) );
     }
-    
-    
+
+
     private function findExtreme( $comparator, bool $is_max, array $array ) {
-        
+
         if( empty( $array ) ) {
             return null;
         }
-        
+
         if( null === $comparator ) {
             return $is_max ? max( $array ) : min( $array );
         }
-        
+
         $extreme = array_shift( $array );
         foreach( $array as $item ) {
             $comarison = $comparator( $item, $extreme );
@@ -380,11 +381,11 @@ class Stream extends Monad implements Countable {
         }
         return $extreme;
     }
-    
-    
+
+
     /**
      * Find minimum element of the stream (optionally compared by comparator).
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
      *
      * @param callable $comparator the comparator (optional)
@@ -399,11 +400,11 @@ class Stream extends Monad implements Countable {
                 optional
         ) );
     }
-    
-    
+
+
     /**
      * Find maximum element of the stream (optionally compared by comparator).
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
      *
      * @param callable $comparator the comparator (optional)
@@ -418,13 +419,13 @@ class Stream extends Monad implements Countable {
                 optional
         ) );
     }
-    
-    
+
+
     /**
      * Get the sum of the stream.
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @return Optional an optional result
      * @see \monad\Stream::close()
      */
@@ -436,14 +437,79 @@ class Stream extends Monad implements Countable {
     }
 
 
+    private function ifMatch( callable $matcher, callable $predicate, callable $action ): Optional {
+        return $this->flatMap( sequence(
+                conditionally(
+                    curry( $matcher, 2 )( $predicate ),
+                    $action
+                ),
+                optional
+        ) );
+    }
+
+
+    /**
+     * Perform an action if all elements of the stream match the predicate,
+     * and return its optional result.
+     *
+     * Current value of the stream will be passed to the action as an argument.
+     *
+     * This is a closing operation (it calls <code>$this->close()</code> internally).
+     *
+     * @param callable $predicate the predicate
+     * @param callable $action the action
+     * @return Optional the optional result of the action
+     * @see \monad\Stream::close()
+     */
+    public function ifAllMatch( callable $predicate, callable $action ): Optional {
+        return $this->ifMatch( all_match, $predicate, $action );
+    }
+
+
+    /**
+     * Perform an action if any element of the stream matches the predicate,
+     * and return its optional result.
+     *
+     * Current value of the stream will be passed to the action as an argument.
+     *
+     * This is a closing operation (it calls <code>$this->close()</code> internally).
+     *
+     * @param callable $predicate the predicate
+     * @param callable $action the action
+     * @return Optional the optional result of the action
+     * @see \monad\Stream::close()
+     */
+    public function ifAnyMatch( callable $predicate, callable $action ): Optional {
+        return $this->ifMatch( any_match, $predicate, $action );
+    }
+
+
+    /**
+     * Perform an action if no elements of the stream match the predicate,
+     * and return its optional result.
+     *
+     * Current value of the stream will be passed to the action as an argument.
+     *
+     * This is a closing operation (it calls <code>$this->close()</code> internally).
+     *
+     * @param callable $predicate the predicate
+     * @param callable $action the action
+     * @return Optional the optional result of the action
+     * @see \monad\Stream::close()
+     */
+    public function ifNoneMatch( callable $predicate, callable $action ): Optional {
+        return $this->ifMatch( none_match, $predicate, $action );
+    }
+
+
     /**
      * Iteratively reduce the stream to a single value using a callback function.
-     * 
+     *
      * Method applies iteratively the callback function to elements and keys of
      * the stream, so as to reduce it to a single value.
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @param callable $callback the callback to apply to each element and key;
      * current intermediate result will be passed as the first argument
      * (in the case of the first iteration it instead holds the value of $initial),
@@ -460,16 +526,16 @@ class Stream extends Monad implements Countable {
                 optional
         ) );
     }
-    
-    
+
+
     /* Other closing operations */
-    
-    
+
+
     /**
      * Get statistics of the stream.
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @param callable|int $flags_or_comparator either one of SORT_* constants
      * or a comparator function (optional, default is SORT_REGULAR)
      * @return Statistics the statistics of the stream
@@ -481,13 +547,13 @@ class Stream extends Monad implements Countable {
         $this->close();
         return $statistics;
     }
-    
-    
+
+
     /**
      * Apply an action to each element of the stream.
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @param callable $action the action
      * @see \convert\traversable_walk
      * @see \monad\Stream::close()
@@ -496,20 +562,20 @@ class Stream extends Monad implements Countable {
         traversable_walk( $action, $this->val() );
         $this->close();
     }
-    
-    
+
+
     private function match( callable $matcher, callable $predicate ): bool {
         $result = $matcher( $predicate, $this->val() );
         $this->close();
         return $result;
     }
-    
-    
+
+
     /**
      * Do all elements of the stream match the predicate.
-     * 
+     *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @param callable $predicate the predicate
      * @return bool true if all elements of the stream match the predicate
      * @see \meta\all_match
@@ -518,8 +584,8 @@ class Stream extends Monad implements Countable {
     public function allMatch( callable $predicate ): bool {
         return $this->match( all_match, $predicate );
     }
-    
-    
+
+
     /**
      * Does at least one element of the stream match the predicate.
      *
@@ -533,8 +599,8 @@ class Stream extends Monad implements Countable {
     public function anyMatch( callable $predicate ): bool {
         return $this->match( any_match, $predicate );
     }
-    
-    
+
+
     /**
      * Does no one element of the stream match the predicate.
      *
@@ -548,13 +614,13 @@ class Stream extends Monad implements Countable {
     public function noneMatch( callable $predicate ): bool {
         return $this->match( none_match, $predicate );
     }
-    
-    
+
+
     /**
      * Get count of elements of the stream.
      *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @param string $mode a mode; either COUNT_NORMAL or COUNT_RECURSIVE
      * (optional, default is COUNT_NORMAL)
      * @return int count of elements of the stream
@@ -567,13 +633,13 @@ class Stream extends Monad implements Countable {
         $this->close();
         return $count;
     }
-    
-    
+
+
     /**
      * Is the stream empty.
      *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @return bool true of the stream is empty
      * @see \monad\Stream::close()
      */
@@ -582,13 +648,13 @@ class Stream extends Monad implements Countable {
         $this->close();
         return $is_empty;
     }
-    
-    
+
+
     /**
      * {@inheritDoc}
      *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @see \monad\Monad::getValue()
      * @see \monad\Stream::close()
      */
@@ -597,24 +663,24 @@ class Stream extends Monad implements Countable {
         $this->close();
         return $value;
     }
-    
-    
+
+
     /**
      * Get the items of the stream as an array.
      *
      * This is a closing operation (it calls <code>$this->close()</code> internally).
-     * 
+     *
      * @return array the items of the stream as an array
      * @see \monad\Stream::close()
      */
     public function toArray(): array {
         return $this->getValue();
     }
-    
-    
+
+
     /**
      * Invoke all close handlers.
-     * 
+     *
      * Current value of the stream will be passed to each handler,
      * result of a handler will be ignored.
      */

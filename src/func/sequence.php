@@ -29,15 +29,15 @@ namespace func;
 
 /**
  * Create a sequence of functions.
- * 
+ *
  * Result of a function will be passed to subsequent function as an argument.
- * 
+ *
  * @param callable ...$functions functions to create a sequence
  * @return callable the sequence of functions as a function
  */
 function sequence( callable $function, callable ...$functions ): callable {
     return function ( ...$args ) use ( $function, $functions ) {
-        $ressult = call_user_func_array( $function, $args );
+        $result = call_user_func_array( $function, $args );
         foreach( $functions as $subsequent_function ) {
             $result = call_user_func( $subsequent_function, $result );
         }

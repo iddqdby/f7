@@ -1,21 +1,29 @@
 {
-    "name": "iddqdby/f7",
-    "description": "Functional library for PHP 7.",
-    "type": "library",
-    "homepage": "https://github.com/iddqdby/f7",
-    "authors": [
-        {
-            "name": "Sergey Protasevich",
-            "email": "sergey.p@gmx.com"
-        }
-    ],
-    "autoload": {
-    	"psr-4": {
-    		"meta\\": "src/meta",
-    		"monad\\": "src/monad"
+	"name" : "iddqdby/f7",
+	"description" : "Functional library for PHP 7.",
+	"type" : "library",
+	"homepage" : "https://github.com/iddqdby/f7",
+	"license" : "MIT",
+	"support" : {
+		"source" : "https://github.com/iddqdby/f7",
+		"issues" : "https://github.com/iddqdby/f7/issues"
+	},
+	"keywords" : [
+		"functionnal programming lambda calculus monad monads higher order functions dependency injection container"
+	],
+	"authors" : [ 
+	 	{
+			"name" : "Sergey Protasevich",
+			"email" : "sergey.p@gmx.com"
+		}
+	],
+	"autoload" : {
+		"psr-4" : {
+			"meta\\" : "src/meta",
+			"monad\\" : "src/monad"
 		},
-    	"files": [
-            "src/monad/_monad.php",
+		"files" : [
+			"src/monad/_monad.php",
 			"src/monad/_stream.php",
 			"src/monad/_optional.php",
 			"src/monad/_chain.php",
@@ -62,6 +70,6 @@
 			"src/convert/traversable_flatten.php",
 			"src/convert/traversable_randomize.php",
 			"src/convert/traversable_merge.php"
-        ]
-    }
+		]
+	}
 }

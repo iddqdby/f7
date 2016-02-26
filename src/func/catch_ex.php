@@ -39,9 +39,8 @@ namespace func;
  * @return callable the function whose exceptions will be handled by the exception handler
  */
 function catch_ex( callable $function, callable $exception_handler, string $exception_class = \Throwable::class ): callable {
-    return function () use ( $function, $exception_handler, $exception_class ) {
+    return function ( ...$args ) use ( $function, $exception_handler, $exception_class ) {
         try {
-            $args = func_get_args();
             return call_user_func_array( $function, func_get_args() );
         } catch( \Throwable $ex ) {
             if( !$ex instanceof $exception_class ) {

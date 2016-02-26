@@ -38,8 +38,8 @@ class Monad {
     protected final function __construct( $value ) {
         $this->value = $this->preprocess( $value );
     }
-    
-    
+
+
     protected function preprocess( $value ) {}
 
 
@@ -72,7 +72,7 @@ class Monad {
 
     /**
      * Get value of the monad.
-     * 
+     *
      * @return mixed the value of the monad
      */
     public function getValue() {
@@ -80,19 +80,19 @@ class Monad {
     }
 
 
-    public final function __invoke( callable $mapper ): Monad {
-        return $this->map( $mapper );
-    }
-    
-    
     public function __toString(): string {
         return (string)$this->val();
     }
 
 
+    public final function __invoke( callable $mapper ): Monad {
+        return $this->map( $mapper );
+    }
+
+
     /**
      * Create a monad.
-     * 
+     *
      * @param mixed $value a value
      * @return Monad a monad
      */

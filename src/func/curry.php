@@ -37,7 +37,7 @@ namespace func;
  * @throws \InvalidArgumentException if number of arguments
  */
 function curry( callable $function, $args_num ): callable {
-    
+
     if( is_bool( $args_num ) ) {
         $args_num = \meta\args_num( $function, $args_num );
     } else {
@@ -46,12 +46,12 @@ function curry( callable $function, $args_num ): callable {
     if( $args_num < 1 ) {
         throw new \InvalidArgumentException( 'Number of arguments must be greater than zero' );
     }
-    
+
     $collector = function () use ( $function, $args_num, &$collector ) {
-        
+
         static $args = [];
         $args[] = @func_get_arg( 0 );
-        
+
         if( count( $args ) === $args_num ) {
             $result = call_user_func_array( $function, $args );
             $args = [];

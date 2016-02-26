@@ -29,21 +29,21 @@ namespace func;
 
 /**
  * Create container function.
- * 
+ *
  * @return callable the container function
  */
 function container(): callable {
-    return function () {
+    return function ( ...$args ) {
         static $values = [];
-        switch( func_num_args() ) {
+        switch( count( $args ) ) {
             case 0:
                 return $values;
             case 1:
-                return $values[ func_get_arg( 0 ) ];
+                return $values[ $args[0] ];
             default:
-                $key = func_get_arg( 0 );
+                $key = $args[0];
                 $prev = @$values[ $key ];
-                $values[ $key ] = func_get_arg( 1 );
+                $values[ $key ] = $args[1];
                 return $prev;
         }
     };

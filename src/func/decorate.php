@@ -29,17 +29,17 @@ namespace func;
 
 /**
  * Decorate a function with a decorator.
- * 
+ *
  * Decorator accepts <b>array</b> of arguments passed to the decorated function
  * as the first argument, and must return optionally modified array for arguments
  * to pass to the original function.
- * 
+ *
  * @param callable $function the function
  * @param callable $decorator the decorator
  */
 function decorate( callable $function, callable $decorator ): callable {
-    return function () use ( $function, $decorator ) {
-        $args = (array)call_user_func( $decorator, func_get_args() );
+    return function ( ...$args ) use ( $function, $decorator ) {
+        $args = (array)call_user_func( $decorator, $args );
         return call_user_func_array( $function, $args );
     };
 }

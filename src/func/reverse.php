@@ -29,13 +29,13 @@ namespace func;
 
 /**
  * Reverse order of arguments of a function.
- * 
+ *
  * @param callable $function the function
  * @return callable a function with reversed order of arguments
  */
 function reverse( callable $function ): callable {
-    return function () use ( $function ) {
-        return call_user_func_array( $function, array_reverse( func_get_args() ) );
+    return function ( ...$args ) use ( $function ) {
+        return call_user_func_array( $function, array_reverse( $args ) );
     };
 }
 

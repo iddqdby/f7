@@ -30,11 +30,11 @@ namespace func;
 /**
  * Return an array of arguments without modification.
  *
- * @param mixed ...$arg the arguments
+ * @param mixed ...$args the arguments
  * @return array the array of arguments
  */
-function pass_through_array( ...$arg ): array {
-    return $arg;
+function pass_through_array( ...$args ): array {
+    return $args;
 }
 
 const pass_through_array = '\\func\\pass_through_array';
