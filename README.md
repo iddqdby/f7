@@ -8,7 +8,7 @@ This library contains:
 * some functions to convert data (see `\convert\` namespace)
 * some functions to retrieve data about data (see `\meta\` namespace)
 
-Also take a look at tiny but handy *Dependency Injection Container*: `\func\dependency_injection_container()`.
+Also take a look at tiny but handy *Dependency Injection Container* : `\func\dependency_injection_container()`.
 
 ## Requirements
 
