@@ -26,11 +26,18 @@
 
 namespace monad;
 
+use function func\negation;
+use function func\conditionally;
+use const func\pass_through;
+
 
 /**
- * Optional (aka "Maybe") monad.
+ * Optional (aka. "Maybe") monad.
  */
 class Optional extends Monad {
+
+
+    /* Monad::bind() shorthands */
 
 
     /**
@@ -38,13 +45,14 @@ class Optional extends Monad {
      *
      * See <code>isPresent()</code>.
      *
-     * @param callable $mapper the mapper
+     * @param callable $function the mapper
      * @return Optional a new Optional if the value was present, or this otherwise
      */
-    public function ifPresent( callable $mapper ): Optional {
-        return $this->isPresent()
-                ? $this->map( $mapper )
-                : $this;
+    public function ifPresent( callable $function ): Optional {
+        return $this->bind( conditionally(
+                negation( is_null ),
+                $function
+        ) );
     }
 
 
@@ -59,10 +67,14 @@ class Optional extends Monad {
      * otherwise a monad with NULL value
      */
     public function filter( callable $predicate ): Optional {
-        return $predicate( $this->val() )
-                ? $this
-                : self::emptyOptional();
+        return $this->bind( conditionally(
+                $predicate,
+                pass_through
+        ) );
     }
+
+
+    /* Monad::bindMonad() shorthands */
 
 
     /**
@@ -72,7 +84,7 @@ class Optional extends Monad {
      * @see \monad\Stream
      */
     public function stream(): Stream {
-        return $this->flatMap( stream );
+        return $this->bindMonad( stream );
     }
 
 
@@ -83,8 +95,11 @@ class Optional extends Monad {
      * @see \monad\Chain
      */
     public function chain(): Chain {
-        return $this->flatMap( chain );
+        return $this->bindMonad( chain );
     }
+
+
+    /* Monad::extract() shorthands */
 
 
     /**
@@ -93,7 +108,7 @@ class Optional extends Monad {
      * @return bool true if the value of the monad is not equal to NULL
      */
     public function isPresent(): bool {
-        return null !== $this->val();
+        return null !== $this->extract();
     }
 
 
@@ -108,7 +123,7 @@ class Optional extends Monad {
      */
     public function orElse( $default = null ) {
         return $this->isPresent()
-                ? $this->val()
+                ? $this->extract()
                 : $default;
     }
 
@@ -126,7 +141,7 @@ class Optional extends Monad {
      */
     public function orElseGet( callable $supplier ) {
         return $this->isPresent()
-                ? $this->val()
+                ? $this->extract()
                 : $supplier();
     }
 
@@ -144,10 +159,13 @@ class Optional extends Monad {
      */
     public function orElseThrow( callable $exception_supplier ) {
         if( $this->isPresent() ) {
-            return $this->val();
+            return $this->extract();
         }
         throw $exception_supplier();
     }
+
+
+    /* Factory methods */
 
 
     /**

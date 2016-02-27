@@ -34,6 +34,7 @@ use function func\curry;
 use function func\method_caller;
 use const meta\is_array_access;
 use const func\property_getter;
+use function func\negation;
 
 
 /**
@@ -41,31 +42,35 @@ use const func\property_getter;
  */
 class Chain extends Monad {
 
-    
+
     /**
      * {@inheritDoc}
-     * 
+     *
      * Value will be mapped only if it is not NULL,
      * otherwise an empty Chain will be returned.
-     * 
-     * @see \monad\Monad::map($mapper)
+     *
+     * @see \monad\Monad::bind($function)
      * @see \monad\Chain::emptyChain()
      */
-    public function map( callable $mapper ): Chain {
-        return null === $this->val()
-                ? self::emptyChain()
-                : parent::map( $mapper );
+    public function bind( callable $function ): Chain {
+        return parent::bind( conditionally(
+                negation( is_null ),
+                $function
+        ) );
     }
-    
-    
+
+
+    /* Monad::bind() shorthands */
+
+
     /**
      * Get key of an array or \ArrayAccess, if both are set.
-     * 
+     *
      * @param int|string $key the key
      * @return Chain the value of the key wrapped into a Chain, or empty Chain
      */
     public function getKey( $key ): Chain {
-        return $this->map( conditionally(
+        return $this->bind( conditionally(
                 conjunction(
                     is_array_access,
                     function ( $value ) use ( $key ) {
@@ -75,8 +80,8 @@ class Chain extends Monad {
                 array_value_getter( $key )
         ) );
     }
-    
-    
+
+
     /**
      * Get property of an object, if both are set.
      *
@@ -84,13 +89,13 @@ class Chain extends Monad {
      * @return Chain the value of the property wrapped into a Chain, or empty Chain
      */
     public function getProperty( string $property ): Chain {
-        return $this->map( conditionally(
+        return $this->bind( conditionally(
                 curry( reverse( property_exists ), 2 )( $property ),
                 property_getter( $property )
         ) );
     }
-    
-    
+
+
     /**
      * Call method of an object, if both are set.
      *
@@ -101,8 +106,8 @@ class Chain extends Monad {
     public function callMethod( string $method, ...$args ): Chain {
         return $this->callMethodArray( $method, $args );
     }
-    
-    
+
+
     /**
      * Call method of an object, if both are set.
      *
@@ -111,51 +116,57 @@ class Chain extends Monad {
      * @return Chain the result of the method wrapped into a Chain, or empty Chain
      */
     public function callMethodArray( string $method, array $args = [] ): Chain {
-        return $this->map( conditionally(
+        return $this->bind( conditionally(
                 curry( reverse( method_exists ), 2 )( $method ),
                 method_caller( $method, $args )
         ) );
     }
-    
-    
+
+
     /**
      * Invoke a value if it is callable.
-     * 
+     *
      * @param mixed ...$args optional arguments to pass to the optional callable
      * @return Chain the result of the invocation wrapped into a Chain, or empty Chain
      */
     public function invoke( ...$args ): Chain {
         return $this->invokeArray( $args );
     }
-    
-    
+
+
     /**
      * Invoke a value if it is callable.
-     * 
+     *
      * @param array $args optional array of arguments to pass to the optional callable
      * @return Chain the result of the invocation wrapped into a Chain, or empty Chain
      */
     public function invokeArray( array $args = [] ): Chain {
-        return $this->map( conditionally(
+        return $this->bind( conditionally(
                 is_callable,
                 curry( reverse( call_user_func_array ), 2 )( $args )
         ) );
     }
-    
-    
+
+
+    /* Monad::bindMonad() shorthands */
+
+
     /**
      * Get optional result of the chain.
-     * 
+     *
      * @return Optional optional result of the chain
      */
     public function result(): Optional {
-        return $this->flatMap( optional );
+        return $this->bindMonad( optional );
     }
+
+
+    /* Factory methods */
 
 
     /**
      * Get empty Chain (the Chain with NULL value).
-     * 
+     *
      * @return Chain the empty Chain
      */
     public static final function emptyChain(): Chain {

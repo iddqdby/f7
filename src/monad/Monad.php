@@ -40,7 +40,9 @@ class Monad {
     }
 
 
-    protected function preprocess( $value ) {}
+    protected function preprocess( $value ) {
+        return $value;
+    }
 
 
     protected function val() {
@@ -49,44 +51,39 @@ class Monad {
 
 
     /**
-     * Map a value of a monad with provided mapper.
+     * Bind a function to this monad.
      *
-     * @param callable $mapper the mapper
-     * @return Monad a monad with mapped value
+     * @param callable $function the function
+     * @return Monad a monad with result of the function
      */
-    public function map( callable $mapper ): Monad {
-        return static::create( $mapper( $this->val() ) );
+    public function bind( callable $function ): Monad {
+        return static::create( $function( $this->val() ) );
     }
 
 
     /**
-     * Map a value of a monad to another monad with provided mapper.
+     * Bind a function that returns new monad to this monad.
      *
-     * @param callable $mapper the mapper that returns monad
-     * @return Monad a monad returned by mapper
+     * @param callable $function the function that returns monad
+     * @return Monad a monad returned by the function
      */
-    public function flatMap( callable $mapper ): Monad {
-        return $mapper( $this->val() );
+    public function bindMonad( callable $function ): Monad {
+        return $function( $this->val() );
     }
 
 
     /**
-     * Get value of the monad.
+     * Extract the value of the monad.
      *
      * @return mixed the value of the monad
      */
-    public function getValue() {
+    public function extract() {
         return $this->val();
     }
 
 
     public function __toString(): string {
-        return (string)$this->val();
-    }
-
-
-    public final function __invoke( callable $mapper ): Monad {
-        return $this->map( $mapper );
+        return (string)$this->extract();
     }
 
 
