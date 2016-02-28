@@ -654,7 +654,7 @@ class Stream extends Monad implements Countable {
      * @see \monad\Stream::close()
      */
     public function isEmpty(): bool {
-        return empty( $this->extract() )
+        return empty( $this->extract() );
     }
 
 
