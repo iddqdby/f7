@@ -181,4 +181,12 @@ class Optional extends Monad {
         return $empty_optional;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function create( $value ): Chain {
+        return null === $value ? self::emptyOptional() : new self( $value );
+    }
+
 }

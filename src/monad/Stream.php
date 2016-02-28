@@ -145,8 +145,25 @@ class Stream extends Monad implements Countable {
      * @return Stream a stream
      * @see \convert\traversable_map
      */
-    public function mapEach( callable $mapper ): Stream {
+    public function map( callable $mapper ): Stream {
         return $this->bind( curry( traversable_map, 2 )( $mapper ) );
+    }
+
+
+    /**
+     * Flatten the stream and map each element of it.
+     *
+     * @param callable $mapper a mapper
+     * @param bool $preserve_keys preserve original keys (optional, default is false)
+     * @return Stream a stream
+     * @see \convert\traversable_flatten
+     * @see \convert\traversable_map
+     */
+    public function flatMap( callable $mapper, bool $preserve_keys = false ): Stream {
+        return $this->bind( sequence(
+                curry( reverse( traversable_flatten ), 2 )( $preserve_keys ),
+                curry( traversable_map, 2 )( $mapper )
+        ) );
     }
 
 
@@ -556,7 +573,7 @@ class Stream extends Monad implements Countable {
      * @see \convert\traversable_walk
      * @see \monad\Stream::close()
      */
-    public function each( callable $action ) {
+    public function forEach( callable $action ) {
         traversable_walk( $action, $this->extract() );
     }
 

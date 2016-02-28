@@ -56,7 +56,7 @@ class Monad {
      * @param callable $function the function
      * @return Monad a monad with result of the function
      */
-    public function bind( callable $function ): Monad {
+    public function continue( callable $function ): Monad {
         return static::create( $function( $this->val() ) );
     }
 
@@ -93,7 +93,7 @@ class Monad {
      * @param mixed $value a value
      * @return Monad a monad
      */
-    public static final function create( $value ): Monad {
+    public static function create( $value ): Monad {
         return new static( $value );
     }
 

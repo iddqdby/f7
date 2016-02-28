@@ -29,12 +29,12 @@ namespace monad;
 
 /**
  * Create new Chain monad.
- * 
+ *
  * @param mixed $value a value
  * @return Chain a Chain monad
  */
 function chain( $value ): Chain {
-    return null === $value ? Chain::emptyChain() : Chain::create( $value );
+    return Chain::create( $value );
 }
 
 const chain = '\\monad\\chain';

@@ -9,7 +9,8 @@
 		"issues" : "https://github.com/iddqdby/f7/issues"
 	},
 	"keywords" : ["functional programming", "lambda calculus", "monad", "monads", "higher order functions", "dependency injection container"],
-	"authors" : [{
+	"authors" : [
+                {
 			"name" : "Sergey Protasevich",
 			"email" : "sergey.p@gmx.com"
 		}

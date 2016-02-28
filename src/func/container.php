@@ -39,10 +39,10 @@ function container(): callable {
             case 0:
                 return $values;
             case 1:
-                return $values[ $args[0] ];
+                return $values[ $args[0] ] ?? null;
             default:
                 $key = $args[0];
-                $prev = @$values[ $key ];
+                $prev = $values[ $key ] ?? null;
                 $values[ $key ] = $args[1];
                 return $prev;
         }

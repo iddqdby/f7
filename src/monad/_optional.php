@@ -29,12 +29,12 @@ namespace monad;
 
 /**
  * Create new Optional (aka "Maybe") monad.
- * 
+ *
  * @param mixed $value a value
  * @return Optional an Optional monad
  */
 function optional( $value ): Optional {
-    return null === $value ? Optional::emptyOptional() : Optional::create( $value );
+    return Optional::create( $value );
 }
 
 const optional = '\\monad\\optional';

@@ -32,9 +32,9 @@ use function func\conjunction;
 use function func\reverse;
 use function func\curry;
 use function func\method_caller;
+use function func\negation;
 use const meta\is_array_access;
 use const func\property_getter;
-use function func\negation;
 
 
 /**
@@ -44,15 +44,12 @@ class Chain extends Monad {
 
 
     /**
-     * {@inheritDoc}
-     *
-     * Value will be mapped only if it is not NULL,
-     * otherwise an empty Chain will be returned.
+     * Apply function only if the value is not NULL.
      *
      * @see \monad\Monad::bind($function)
      * @see \monad\Chain::emptyChain()
      */
-    public function bind( callable $function ): Chain {
+    public function continue( callable $function ): Chain {
         return parent::bind( conditionally(
                 negation( is_null ),
                 $function
@@ -70,7 +67,7 @@ class Chain extends Monad {
      * @return Chain the value of the key wrapped into a Chain, or empty Chain
      */
     public function getKey( $key ): Chain {
-        return $this->bind( conditionally(
+        return $this->continue( conditionally(
                 conjunction(
                     is_array_access,
                     function ( $value ) use ( $key ) {
@@ -89,7 +86,7 @@ class Chain extends Monad {
      * @return Chain the value of the property wrapped into a Chain, or empty Chain
      */
     public function getProperty( string $property ): Chain {
-        return $this->bind( conditionally(
+        return $this->continue( conditionally(
                 curry( reverse( property_exists ), 2 )( $property ),
                 property_getter( $property )
         ) );
@@ -116,7 +113,7 @@ class Chain extends Monad {
      * @return Chain the result of the method wrapped into a Chain, or empty Chain
      */
     public function callMethodArray( string $method, array $args = [] ): Chain {
-        return $this->bind( conditionally(
+        return $this->continue( conditionally(
                 curry( reverse( method_exists ), 2 )( $method ),
                 method_caller( $method, $args )
         ) );
@@ -141,7 +138,7 @@ class Chain extends Monad {
      * @return Chain the result of the invocation wrapped into a Chain, or empty Chain
      */
     public function invokeArray( array $args = [] ): Chain {
-        return $this->bind( conditionally(
+        return $this->continue( conditionally(
                 is_callable,
                 curry( reverse( call_user_func_array ), 2 )( $args )
         ) );
@@ -175,6 +172,14 @@ class Chain extends Monad {
             $empty_chain = new self( null );
         }
         return $empty_chain;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function create( $value ): Chain {
+        return null === $value ? self::emptyChain() : new self( $value );
     }
 
 }
