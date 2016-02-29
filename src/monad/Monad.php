@@ -56,7 +56,7 @@ class Monad {
      * @param callable $function the function
      * @return Monad a monad with result of the function
      */
-    public function continue( callable $function ): Monad {
+    public function bind( callable $function ): Monad {
         return static::create( $function( $this->val() ) );
     }
 
