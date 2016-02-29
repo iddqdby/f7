@@ -92,7 +92,7 @@ class Stream extends Monad implements Countable {
      *
      * @see \monad\Monad::bind($function)
      */
-    public function bind( callable $function ): Stream {
+    public function bind( callable $function ): Monad {
         $stream = parent::bind( $function );
         $stream->close_handlers = $this->close_handlers;
         return $stream;
