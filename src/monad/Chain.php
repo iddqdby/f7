@@ -178,7 +178,7 @@ class Chain extends Monad {
     /**
      * {@inheritDoc}
      */
-    public static function create( $value ): Chain {
+    public static function create( $value ): Monad {
         return null === $value ? self::emptyChain() : new self( $value );
     }
 
