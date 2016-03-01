@@ -2,11 +2,15 @@
 
 /*
  * This file contains constants for some built-in PHP functions.
- */ 
+ */
 
 const call_user_func = 'call_user_func';
 
 const call_user_func_array = 'call_user_func_array';
+
+const explode = 'explode';
+
+const implode = 'implode';
 
 const count = 'count';
 
@@ -25,6 +29,10 @@ const floor = 'floor';
 const min = 'min';
 
 const max = 'max';
+
+const preg_match = 'preg_match';
+
+const preg_match_all = 'preg_match_all';
 
 const property_exists = 'property_exists';
 
