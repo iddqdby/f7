@@ -12,6 +12,12 @@ const explode = 'explode';
 
 const implode = 'implode';
 
+const trim = 'trim';
+
+const rtrim = 'rtrim';
+
+const ltrim = 'ltrim';
+
 const count = 'count';
 
 const intval = 'intval';
