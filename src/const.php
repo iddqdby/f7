@@ -44,6 +44,8 @@ const property_exists = 'property_exists';
 
 const method_exists = 'method_exists';
 
+const in_array = 'in_array';
+
 const array_change_key_case = 'array_change_key_case';
 
 const array_chunk = 'array_chunk';
