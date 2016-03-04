@@ -50,13 +50,15 @@ function curry( callable $function, $args_num ): callable {
     $collector = function () use ( $function, $args_num, &$collector ) {
 
         static $args = [];
-        $args[] = @func_get_arg( 0 );
+        $arg = @func_get_arg( 0 );
 
-        if( count( $args ) === $args_num ) {
-            $result = call_user_func_array( $function, $args );
-            $args = [];
-            return $result;
+        if( count( $args ) + 1 == $args_num ) {
+            $args_passed = $args;
+            $args_passed[] = $arg;
+            return call_user_func_array( $function, $args_passed );
         }
+
+        $args[] = $arg;
         return $collector;
     };
     return $collector;
