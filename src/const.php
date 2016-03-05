@@ -12,6 +12,8 @@ const explode = 'explode';
 
 const implode = 'implode';
 
+const strlen = 'strlen';
+
 const trim = 'trim';
 
 const rtrim = 'rtrim';
