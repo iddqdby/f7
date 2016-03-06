@@ -72,6 +72,7 @@ use meta\Statistics;
 use Countable;
 use InvalidArgumentException;
 use function func\set_args;
+use function meta\is_array_access;
 
 
 /**
@@ -176,6 +177,77 @@ class Stream extends Monad implements Countable {
      */
     public function flatten( bool $preserve_keys = false ): Stream {
         return $this->bind( curry( reverse( traversable_flatten ), 2 )( $preserve_keys ) );
+    }
+
+
+    /**
+     * Map elements to key-value pairs.
+     *
+     * Key-value pair is an array with two keys: "key" and "value",
+     * which consist with original key and original value respectively.
+     *
+     * @param string|int index of a key of a pair (optional, default is "key")
+     * @param string|int index of a value of a pair (optional, default is "value")
+     * @return Stream a stream
+     */
+    public function pairs( $index_key = 'key', $index_value = 'value' ): Stream {
+        return $this->bind( function ( array $array ) use ( $index_key, $index_value ) {
+            $result = [];
+            foreach( $array as $key => $value ) {
+                $result[ $key ] = [
+                    $index_key => $key,
+                    $index_value => $value,
+                ];
+            }
+            return $result;
+        } );
+    }
+
+
+    /**
+     * Consider each element of the stream as a pair,
+     * and build new stream based on keys and values
+     * of that pairs.
+     *
+     * @param string|int index of a key of a pair (optional, default is "key")
+     * @param string|int index of a value of a pair (optional, default is "value")
+     * @return Stream a stream
+     * @see \monad\Stream::pairs()
+     */
+    public function decouplePairs( $index_key = 'key', $index_value = 'value' ): Stream {
+        return $this->bind( function ( array $array ) use ( $index_key, $index_value ) {
+            $result = [];
+            foreach( $array as $key => $value ) {
+                if( is_array_access( $value ) ) {
+                    $result[ @$value[ $index_key ] ] = @$value[ $index_value ];
+                } else {
+                    $result[ $key ] = $value;
+                }
+            }
+            return $result;
+        } );
+    }
+
+
+    /**
+     * Map elements to its keys.
+     *
+     * @return Stream a stream
+     * @see \array_keys
+     */
+    public function keys(): Stream {
+        return $this->bind( array_keys );
+    }
+
+
+    /**
+     * Map elements to its values.
+     *
+     * @return Stream a stream
+     * @see \array_values
+     */
+    public function values(): Stream {
+        return $this->bind( array_values );
     }
 
 

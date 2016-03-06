@@ -34,21 +34,20 @@ namespace convert;
  * value will be passed to the predicate as the first argument,
  * key will be passed as the second one
  * @param array|\Traversable $traversable the traversable to filter
- * @param bool $preserve_keys preserve original keys in the filtered array
- * (optional, default is true)
+ * @param bool $with_keys pass key to the predicate as second argument
+ * (optional, default is false)
  * @return array the filtered array
  */
-function traversable_filter( callable $predicate, $traversable, bool $preserve_keys = true ): array {
+function traversable_filter( callable $predicate, $traversable, bool $with_keys = false ): array {
     $array_filtered = [];
     foreach( to_traversable( $traversable ) as $key => $value ) {
-        if( !call_user_func( $predicate, $value, $key ) ) {
+        $result = $with_keys
+                ? call_user_func( $predicate, $value, $key )
+                : call_user_func( $predicate, $value );
+        if( !$result ) {
             continue;
         }
-        if( $preserve_keys ) {
-            $array_filtered[ $key ] = $value;
-        } else {
-            $array_filtered[] = $value;
-        }
+        $array_filtered[ $key ] = $value;
     }
     return $array_filtered;
 }

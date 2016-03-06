@@ -29,24 +29,21 @@ namespace convert;
 
 /**
  * Map an array or traversable to another array.
- * 
+ *
  * @param callable $mapper a mapper to map each value;
  * value will be passed to the mapper as the first argument,
  * key will be passed as the second one
  * @param array|\Traversable $traversable the traversable to map
- * @param bool $preserve_keys preserve original keys in the mapped array
- * (optional, default is true)
+ * @param bool $with_keys pass key to the mapper as second argument
+ * (optional, default is false)
  * @return array the mapped array
  */
-function traversable_map( callable $mapper, $traversable, bool $preserve_keys = true ): array {
+function traversable_map( callable $mapper, $traversable, bool $with_keys = false ): array {
     $array_mapped = [];
     foreach( to_traversable( $traversable ) as $key => $value ) {
-        $value_mapped = call_user_func( $mapper, $value, $key );
-        if( $preserve_keys ) {
-            $array_mapped[ $key ] = $value_mapped;
-        } else {
-            $array_mapped[] = $value_mapped;
-        }
+        $array_mapped[ $key ] = $with_keys
+                ? call_user_func( $mapper, $value, $key )
+                : call_user_func( $mapper, $value );
     }
     return $array_mapped;
 }
