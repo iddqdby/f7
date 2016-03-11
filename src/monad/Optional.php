@@ -57,6 +57,24 @@ class Optional extends Monad {
 
 
     /**
+     * Call function and wrap its result into new Optional monad if this monad is empty.
+     *
+     * See <code>isPresent()</code>.
+     *
+     * @param callable $function the function
+     * @return Optional new Optional with the result of the function if this Optional
+     * is empty, or this optional
+     */
+    public function ifEmpty( callable $function ): Optional {
+        return $this->bind( conditionally(
+                is_null,
+                $function,
+                pass_through
+        ) );
+    }
+
+
+    /**
      * Filter a value of the monad by a predicate.
      *
      * If the value matches the predicate, this monad will be returned,
