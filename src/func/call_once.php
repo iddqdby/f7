@@ -35,8 +35,8 @@ namespace func;
  * @return callable a callable-once function
  */
 function call_once( callable $function ): callable {
-    return function () use ( $function ) {
-        static $result;
+    return function ( ...$args ) use ( $function ) {
+        static $result = null;
         static $has_result = false;
         if( !$has_result ) {
             static $called = false;
@@ -44,9 +44,12 @@ function call_once( callable $function ): callable {
                 throw new \LogicException( 'Function can be called only once' );
             }
             $called = true;
-            $result = call_user_func_array( $function, func_get_args() );
-            $has_result = true;
-            $called = false;
+            try {
+                $result = call_user_func_array( $function, $args );
+            } finally {
+                $has_result = true;
+                $called = false;
+            }
         }
         return $result;
     };
