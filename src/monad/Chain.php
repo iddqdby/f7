@@ -33,6 +33,7 @@ use function func\reverse;
 use function func\curry;
 use function func\method_caller;
 use function func\negation;
+use function func\property_getter;
 use const meta\is_array_access;
 use const func\property_getter;
 
