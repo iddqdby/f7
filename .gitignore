@@ -1,6 +1,7 @@
 /_info
 /vendor
-/test
 .buildpath
 .project
 .settings
+.composer.lock
+

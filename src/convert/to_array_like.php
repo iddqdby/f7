@@ -32,8 +32,8 @@ namespace convert;
  * is like an array (see <code>\meta\is_like_array()</code>).
  *
  * Additional argument can be set to true to force conversion of empty values
- * into empty arrays. By default any not-like-array value (except of null) will
- * just be wrapped into an array with single element.
+ * into empty arrays. By default any not-like-array value will just be casted
+ * as an array.
  *
  * @param mixed $var the value
  * @param bool $empty_value_to_empty_array force conversion of empty values

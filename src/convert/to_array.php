@@ -34,8 +34,8 @@ use const func\pass_through;
  * Convert a traversable or other value into an array or leave it as is if it already is an array.
  *
  * Additional argument can be set to true to force conversion of empty values
- * into empty arrays. By default any not-array and not-traversable value (except of null) will
- * just be wrapped into an array with single element.
+ * into empty arrays. By default any not-array and not-traversable value will
+ * be casted as array.
  *
  * @param mixed $var the value
  * @param bool $empty_value_to_empty_array force conversion of empty values
@@ -44,19 +44,19 @@ use const func\pass_through;
  * converted to an array
  */
 function to_array( $var, bool $empty_value_to_empty_array = false ): array {
-    
+
     if( $empty_value_to_empty_array && empty( $var ) ) {
         return [];
     }
-    
+
     if( is_array( $var ) ) {
         return $var;
     }
-    
+
     if( is_traversable( $var ) ) {
         return traversable_map( pass_through, $var );
     }
-    
+
     return (array)$var;
 }
 

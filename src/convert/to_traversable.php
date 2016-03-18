@@ -28,7 +28,7 @@ namespace convert;
 
 
 /**
- * Wrap a value into an array if it is not traversable.
+ * Cast a value as array if it is not traversable.
  *
  * @param mixed $var the value
  * @return mixed|array the value if it is traversable, or the value wrapped into
