@@ -120,17 +120,17 @@ class Chain extends Monad implements ArrayAccess {
     }
 
 
-    public function __set() {
+    public function __set( string $property, $value ) {
         $this->throwBadMethodCallException();
     }
 
 
-    public function __unset() {
+    public function __unset( string $property ) {
         $this->throwBadMethodCallException();
     }
 
 
-    public function __isset() {
+    public function __isset( string $property ) {
         $this->throwBadMethodCallException();
     }
 
