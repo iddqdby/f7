@@ -8,6 +8,7 @@
 	<testsuites>
 		<testsuite name="convert">
 			<file>./test/convert.php</file>
+			<file>./test/convert_traversable.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

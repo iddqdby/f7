@@ -26,6 +26,8 @@
 
 namespace monad;
 
+use ArrayAccess;
+use BadMethodCallException;
 use function func\conditionally;
 use function func\array_value_getter;
 use function func\conjunction;
@@ -35,13 +37,12 @@ use function func\method_caller;
 use function func\negation;
 use function func\property_getter;
 use const meta\is_array_access;
-use const func\property_getter;
 
 
 /**
  * Chain monad.
  */
-class Chain extends Monad {
+class Chain extends Monad implements ArrayAccess {
 
 
     /**
@@ -80,6 +81,26 @@ class Chain extends Monad {
     }
 
 
+    public function offsetGet( $key ) {
+        return $this->getKey( $key );
+    }
+
+
+    public function offsetSet( $offset, $value ) {
+        $this->throwBadMethodCallException();
+    }
+
+
+    public function offsetUnset( $offset ) {
+        $this->throwBadMethodCallException();
+    }
+
+
+    public function offsetExists( $offset ) {
+        $this->throwBadMethodCallException();
+    }
+
+
     /**
      * Get property of an object, if both are set.
      *
@@ -91,6 +112,26 @@ class Chain extends Monad {
                 curry( reverse( property_exists ), 2 )( $property ),
                 property_getter( $property )
         ) );
+    }
+
+
+    public function __get( string $property ) {
+        return $this->getProperty( $property );
+    }
+
+
+    public function __set() {
+        $this->throwBadMethodCallException();
+    }
+
+
+    public function __unset() {
+        $this->throwBadMethodCallException();
+    }
+
+
+    public function __isset() {
+        $this->throwBadMethodCallException();
     }
 
 
@@ -121,6 +162,11 @@ class Chain extends Monad {
     }
 
 
+    public function __call( string $method, array $args ) {
+        return $this->callMethodArray( $method, $args );
+    }
+
+
     /**
      * Invoke a value if it is callable.
      *
@@ -146,6 +192,11 @@ class Chain extends Monad {
     }
 
 
+    public function __invoke( ...$args ) {
+        return $this->invokeArray( $args );
+    }
+
+
     /* Monad::bindMonad() shorthands */
 
 
@@ -156,6 +207,14 @@ class Chain extends Monad {
      */
     public function result(): Optional {
         return $this->bindMonad( optional );
+    }
+
+
+    /* Helper methods */
+
+
+    protected function throwBadMethodCallException() {
+        throw new BadMethodCallException('Chain monad can only get value if it is present.');
     }
 
 
