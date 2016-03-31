@@ -383,7 +383,7 @@ class Stream extends Monad implements Countable {
 
     private function find( $predicate, array $array ) {
         foreach( $array as $key => $item ) {
-            if( null === $predicate || call_user_func( $predicate, $value, $key ) ) {
+            if( null === $predicate || call_user_func( $predicate, $item, $key ) ) {
                 return $item;
             }
         }
