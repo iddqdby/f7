@@ -43,8 +43,8 @@ function call_once( callable $function ): callable {
             if( $called ) {
                 throw new \LogicException( 'Function can be called only once' );
             }
-            $called = true;
             try {
+                $called = true;
                 $result = call_user_func_array( $function, $args );
             } finally {
                 $has_result = true;

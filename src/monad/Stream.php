@@ -402,7 +402,9 @@ class Stream extends Monad implements Countable {
      */
     public function findFirst( callable $predicate = null ): Optional {
         return $this->bindMonad( sequence(
-                curry( [$this, 'find'], 2 )( $predicate ),
+                curry( function ( $predicate, array $array ) {
+                    return $this->find( $predicate, $array );
+                }, 2 )( $predicate ),
                 optional
         ) );
     }
@@ -420,7 +422,9 @@ class Stream extends Monad implements Countable {
     public function findLast( callable $predicate = null ): Optional {
         return $this->bindMonad( sequence(
                 curry( reverse( array_reverse ) )( true ),
-                curry( [$this, 'find'], 2 )( $predicate ),
+                curry( function ( $predicate, array $array ) {
+                    return $this->find( $predicate, $array );
+                }, 2 )( $predicate ),
                 optional
         ) );
     }
@@ -444,7 +448,9 @@ class Stream extends Monad implements Countable {
                     )
                     : sequence(
                         traversable_randomize,
-                        curry( [$this, 'find'], 2 )( $predicate )
+                        curry( function ( $predicate, array $array ) {
+                            return $this->find( $predicate, $array );
+                        }, 2 )( $predicate )
                     ),
                 optional
         ) );
@@ -483,7 +489,9 @@ class Stream extends Monad implements Countable {
      */
     public function findMin( callable $comparator = null ): Optional {
         return $this->bindMonad( sequence(
-                curry( [$this, 'findExtreme'], 3 )
+                curry( function ( $comparator, bool $is_max, array $array ) {
+                    return $this->findExtreme( $comparator, $is_max, $array );
+                }, 3 )
                     ( $comparator )
                     ( false ),
                 optional
@@ -502,7 +510,9 @@ class Stream extends Monad implements Countable {
      */
     public function findMax( callable $comparator = null ): Optional {
         return $this->bindMonad( sequence(
-                curry( [$this, 'findExtreme'], 3 )
+                curry( function ( $comparator, bool $is_max, array $array ) {
+                    return $this->findExtreme( $comparator, $is_max, $array );
+                }, 3 )
                     ( $comparator )
                     ( true ),
                 optional
