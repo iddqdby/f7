@@ -29,12 +29,12 @@ namespace func;
 
 /**
  * Create a dependency injection container function.
- * 
+ *
  * @return the dependency injection container function
  */
 function dependency_injection_container(): callable {
     $container = sequence( decorate( container(), function ( array $args ) use ( &$container ) {
-        if( is_callable( $definition = @$args[1] ) && !@$args[2] ) {
+        if( is_callable( $definition = $args[1] ?? null ) && !( $args[2] ?? false ) ) {
             $args[1] = call_once( set_args( $definition, $container ) );
         }
         return $args;
