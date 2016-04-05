@@ -47,10 +47,10 @@ function curry( callable $function, $args_num ): callable {
         throw new \InvalidArgumentException( 'Number of arguments must be greater than zero' );
     }
 
-    $collector = function () use ( $function, $args_num, &$collector ) {
+    $collector = function ( ...$args_current ) use ( $function, $args_num, &$collector ) {
 
         static $args = [];
-        $arg = @func_get_arg( 0 );
+        $arg = $args_current[0] ?? null;
 
         if( count( $args ) + 1 == $args_num ) {
             $args_passed = $args;

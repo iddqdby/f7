@@ -219,7 +219,7 @@ class Stream extends Monad implements Countable {
             $result = [];
             foreach( $array as $key => $value ) {
                 if( is_array_access( $value ) ) {
-                    $result[ @$value[ $index_key ] ] = @$value[ $index_value ];
+                    $result[ $value[ $index_key ] ] = $value[ $index_value ];
                 } else {
                     $result[ $key ] = $value;
                 }
